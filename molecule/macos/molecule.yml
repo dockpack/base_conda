@@ -1,0 +1,14 @@
+---
+
+driver:
+  name: delegated
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+platforms:
+  - name: conda_macos
+provisioner:
+  name: ansible
+verifier:
+  name: ansible

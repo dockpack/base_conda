@@ -1,0 +1,19 @@
+---
+# tasks file for base_conda
+
+- name: install when install_miniconda is true
+  include_tasks: install.yml
+#  when: install_miniconda is defined and install_miniconda|bool
+
+- name: check presence of Conda
+  stat:
+    path: "{{ miniconda_dir }}/bin/conda"
+  register: conda_executable
+
+- name: create conda environments on unix
+  include_tasks: unix.yml
+  when: ansible_os_family != 'Windows'
+
+- name: create conda environments on windows
+  include_tasks: windows.yml
+  when: ansible_os_family == 'Windows'

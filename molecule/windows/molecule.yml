@@ -1,0 +1,30 @@
+---
+
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+platforms:
+  - name: conda-windows
+    box: jborean93/WindowsServer2016
+    memory: 4069
+    cpus: 2
+    groups:
+      - windows
+provisioner:
+  name: ansible
+  inventory:
+    group_vars:
+      windows:
+        ansible_user: vagrant
+        ansible_password: vagrant
+        ansible_connection: psrp
+        ansible_port: 55986
+        ansible_psrp_transport: basic
+        ansible_psrp_cert_validation: ignore
+verifier:
+  name: ansible

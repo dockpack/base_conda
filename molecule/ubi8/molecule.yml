@@ -1,0 +1,16 @@
+---
+
+driver:
+  name: docker
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+platforms:
+  - name: conda_ubi8
+    image: registry.access.redhat.com/ubi8/ubi
+    privileged: true
+provisioner:
+  name: ansible
+verifier:
+  name: ansible

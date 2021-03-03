@@ -1,0 +1,16 @@
+---
+
+driver:
+  name: docker
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+platforms:
+  - name: conda_alpine
+    image: alpine:latest
+    privileged: true
+provisioner:
+  name: ansible
+verifier:
+  name: ansible

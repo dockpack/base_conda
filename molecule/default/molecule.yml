@@ -1,0 +1,16 @@
+---
+
+driver:
+  name: docker
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+platforms:
+  - name: conda_centos7
+    image: centos:7
+    privileged: true
+provisioner:
+  name: ansible
+verifier:
+  name: ansible

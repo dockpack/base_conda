@@ -1,0 +1,65 @@
+---
+
+
+# Mac
+- name: install miniconda on macos
+  when: ansible_os_family == 'Darwin'
+  become: false
+  homebrew_cask:
+    name: miniconda
+    state: present
+    update_homebrew: true
+
+# RedHat Linux
+- block:
+    - name: install conda gpg key
+      rpm_key:
+        state: present
+        key: 'https://repo.anaconda.com/pkgs/misc/gpgkeys/anaconda.asc'
+
+    - name: install conda.repo file
+      copy:
+        src: conda.repo
+        dest: /etc/yum.repos.d
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: install miniconda package
+      package:
+        name: conda
+        state: present
+
+    - name: set miniconda_dir
+      set_fact:
+        miniconda_dir: "{{ lin_conda_dir }}"
+  when:
+    - ansible_os_family == 'RedHat'
+
+
+# Wndows
+- block:
+
+    - name: set miniconda_dir
+      set_fact:
+        miniconda_dir: "{{ win_conda_dir }}"
+
+    - name: ensure download directory exists on windows
+      win_file:
+        path: "{{ win_download_dir }}"
+        state: directory
+
+    - name: download miniconda on windows
+      win_get_url:
+        url: "{{ win_conda_url }}"
+        dest: "{{ win_download_dir }}"
+      register: download_zlib
+      until: download_zlib is succeeded
+      retries: 10
+      delay: 2
+
+    - name: install miniconda on windows
+      win_shell: 'Miniconda3-latest-Windows-x86_64.exe /InstallationType=AllUsers /RegisterPython=1 /AddToPath=1 /S /D={{ win_conda_dir }}'
+      args:
+        chdir: "{{ win_download_dir }}"
+  when: ansible_os_family == 'Windows'

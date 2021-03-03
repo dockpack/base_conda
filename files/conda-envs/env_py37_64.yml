@@ -1,0 +1,25 @@
+---
+name: py37_64
+channels:
+  # - https://repo.anaconda.com/pkgs/free
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.7
+  - setuptools
+  - future
+  - pip
+  - conda-build
+  # main packages
+  - pytest
+  - flake8
+  - tox
+  # documentation related apps
+  - doxygen=1.8.14=0  # bug in 1.8.16, pin to working version
+  # serialization related
+  - pip:
+      # documentation related
+      - mkdocs
+      - sphinx
+      - sphinx-gallery
+      - sphinx-rtd-theme

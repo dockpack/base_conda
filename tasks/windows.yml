@@ -1,0 +1,24 @@
+---
+
+- name: Copy conda environment templates
+  win_template:
+    dest: 'C:/tmp/'
+    src: "{{ item }}"
+  with_fileglob: "files/conda-envs/*.yml"
+
+- name: Configure conda environments
+  win_shell: |
+    cmd.exe {{ conda_dir }}/Scripts/activate.bat {{ conda_dir }}
+    {{ conda_dir }}/condabin/conda env create -f C:/tmp/{{ item|basename  }}
+  register: venv
+  failed_when: venv.rc|int > 1
+  with_fileglob: "files/conda-envs/*.yml"
+  tags:
+    - venv
+
+- name: Cleanup conda
+  win_shell: |
+    cmd.exe {{ conda_dir }}/Scripts/activate.bat {{ conda_dir }}
+    {{ conda_dir }}/condabin/conda clean --all
+  tags:
+    - cleanup

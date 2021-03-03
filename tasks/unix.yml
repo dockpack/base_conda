@@ -1,0 +1,22 @@
+---
+
+- name: copy conda-envs
+  copy:
+    src: "{{ item }}"
+    dest: "{{ lin_download_dir }}"
+    mode: 0644
+  with_fileglob: "files/conda-envs/*.yml"
+
+- name: create conda environments
+  command: "{{ miniconda_dir }}/bin/conda env create -f {{ lin_download_dir }}/{{ item|basename }}"
+  with_fileglob: "files/conda-envs/*.yml"
+  tags:
+    - miniconda
+
+- name: cleanup conda
+  command: "{{ miniconda_dir }}/bin/conda clean --yes --all"
+  register: clean
+  changed_when: clean.rc|int == 0
+  tags:
+    - miniconda
+    - notest

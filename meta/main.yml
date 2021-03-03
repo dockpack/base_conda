@@ -1,0 +1,22 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: bbaassssiiee
+  description: |
+    Miniconda is the minimal version of Anaconda, a cross-platform
+    Python distribution with a built-in environment and package manager.
+  license: MIT
+  min_ansible_version: 2.7.0
+  platforms:
+    - name: Windows
+      versions:
+        - all
+        - 2016
+  galaxy_tags:
+    - anaconda
+    - windows
+    - conda
+    - python
+    - virtualenv
+...
