@@ -6,13 +6,14 @@
   tags: always
 
 - name: check presence of conda
+  when: ansible_os_family != 'Windows'
   stat:
     path: "{{ miniconda_bindir }}/conda"
   register: conda_executable
 
 - name: install miniconda
   include_tasks: install.yml
-  when: not conda_executable.stat.exists
+  when: ansible_os_family == 'Windows' or not conda_executable.stat.exists
 
 # yamllint disable-rule:line-length
 # https://stackoverflow.com/questions/35605603/using-ansible-set-fact-to-create-a-dictionary-from-register-results

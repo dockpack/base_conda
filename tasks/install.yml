@@ -83,14 +83,15 @@
     - name: download miniconda on windows
       win_get_url:
         url: "{{ win_conda_url }}"
-        dest: "{{ win_download_dir }}"
+        dest: "{{ win_download_dir }}/{{ win_installer }}"
       register: download_zlib
       until: download_zlib is succeeded
       retries: 10
       delay: 2
 
     - name: install miniconda on windows
-      win_shell: 'Miniconda3-latest-Windows-x86_64.exe /InstallationType=AllUsers /RegisterPython=1 /AddToPath=1 /S /D={{ win_conda_dir }}'
+      win_shell: '{{ win_download_dir }}\{{ win_installer }} /InstallationType=AllUsers /RegisterPython=1 /AddToPath=1 /S /D={{ miniconda_dir }}'
       args:
         chdir: "{{ win_download_dir }}"
+        creates: "{{ miniconda_bindir }}"
   when: ansible_os_family == 'Windows'

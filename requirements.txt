@@ -8,3 +8,8 @@ yamllint
 ansible-lint
 docker==4.2.2
 anyconfig>=0.10.0 # not directly required, pinned by Snyk to avoid a vulnerability
+beautifulsoup4
+packaging
+pywinrm==0.2.2
+pypsrp
+requests
