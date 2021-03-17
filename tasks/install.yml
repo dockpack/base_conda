@@ -3,12 +3,11 @@
 
 # Mac
 - name: install miniconda on macos
-  when: ansible_os_family == 'Darwin'
   become: false
-  homebrew_cask:
-    name: miniconda
-    state: present
-    update_homebrew: true
+  command: /usr/local/bin/brew reinstall miniconda
+  when:
+    - ansible_os_family == 'Darwin'
+
 
 # RedHat Linux
 - block:
@@ -29,15 +28,11 @@
       package:
         name: conda
         state: present
-
-    - name: set miniconda_dir
-      set_fact:
-        miniconda_dir: "{{ lin_conda_dir }}"
   when:
     - ansible_os_family == 'RedHat'
 
 
-# Wndows
+# Windows
 - block:
 
     - name: set miniconda_dir

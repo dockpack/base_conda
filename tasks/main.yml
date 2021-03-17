@@ -1,18 +1,55 @@
 ---
 # tasks file for base_conda
 
-- name: install when install_miniconda is true
-  include_tasks: install.yml
-#  when: install_miniconda is defined and install_miniconda|bool
+- name: set miniconda_dir
+  set_fact:
+    miniconda_dir: "{{ lin_conda_dir }}"
+    miniconda_bindir: "{{ lin_conda_bindir }}"
+    miniconda_envsdir: "{{ lin_conda_envsdir }}"
+  when:
+    - ansible_os_family == 'RedHat'
 
-- name: check presence of Conda
+- name: set miniconda_dir
+  set_fact:
+    miniconda_dir: "{{ mac_conda_dir }}"
+    miniconda_bindir: "{{ mac_conda_bindir }}"
+    miniconda_envsdir: "{{ mac_conda_envsdir }}"
+  when:
+    - ansible_os_family == 'Darwin'
+
+- name: check presence of conda
   stat:
-    path: "{{ miniconda_dir }}/bin/conda"
+    path: "{{ miniconda_bindir }}/conda"
   register: conda_executable
+
+- name: install miniconda
+  include_tasks: install.yml
+  when: not conda_executable.stat.exists
+
+# yamllint disable-rule:line-length
+# https://stackoverflow.com/questions/35605603/using-ansible-set-fact-to-create-a-dictionary-from-register-results
+- name: "create list of dictionaries, conda_files, each with properties 'name' and 'file'"
+  set_fact:
+    conda_files: |
+        {{ conda_files|default([]) + [{'name': lookup('pipe', 'grep ^name: {{ item  }} | cut -d: -f2| tr -d " "' ), 'file': item|basename} ] }}
+  with_fileglob: "files/conda-envs/*"
+  tags:
+    - list
+    - dict
+# yamllint enable-rule:line-length
+
+- name: display dictionary
+  debug:
+    var: conda_files
+  tags:
+    - list
+    - dict
 
 - name: create conda environments on unix
   include_tasks: unix.yml
   when: ansible_os_family != 'Windows'
+  tags:
+    - list
 
 - name: create conda environments on windows
   include_tasks: windows.yml

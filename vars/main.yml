@@ -1,2 +1,10 @@
 ---
+# EL
 lin_conda_dir: /opt/conda
+lin_download_dir: /var/tmp
+lin_conda_bindir:  /opt/conda/bin
+lin_conda_envsdir:  /opt/conda/envs
+# Mac
+mac_conda_dir: /usr/local/Caskroom/miniconda
+mac_conda_bindir: /usr/local/Caskroom/miniconda/base/condabin
+mac_conda_envsdir: /usr/local/Caskroom/miniconda/base/envs
