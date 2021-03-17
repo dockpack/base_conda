@@ -27,8 +27,8 @@
 
         - name: Dump instance config
           copy:
+            mode: 0644
             content: |
               # Molecule managed
-
               {{ instance_conf | to_json | from_json | to_yaml }}
             dest: "{{ molecule_instance_config }}"

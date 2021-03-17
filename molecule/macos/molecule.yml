@@ -7,7 +7,7 @@ lint: |
   yamllint .
   ansible-lint
 platforms:
-  - name: conda_macos
+  - name: localhost
 provisioner:
   name: ansible
 verifier:
