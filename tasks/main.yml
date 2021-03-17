@@ -21,7 +21,7 @@
   set_fact:
     conda_files: |
         {{ conda_files|default([]) + [{'name': lookup('pipe', 'grep ^name: {{ item  }} | cut -d: -f2| tr -d " "' ), 'file': item|basename} ] }}
-  with_fileglob: "files/conda-envs/*"
+  with_fileglob: "files/conda-envs/*.y*l"
   tags:
     - list
     - dict
