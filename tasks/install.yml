@@ -4,10 +4,23 @@
 # Mac
 - name: install miniconda on macos
   become: false
-  command: /usr/local/bin/brew reinstall miniconda
+  command: /usr/local/bin/brew install miniconda
   when:
     - ansible_os_family == 'Darwin'
 
+# Debian Linux
+- block:
+    - name: install conda gpg key
+      apt_key:
+        state: present
+        url: 'https://repo.anaconda.com/pkgs/misc/gpgkeys/anaconda.asc'
+
+    - name: install Conda Debian repo
+      apt_repository:
+        repo: 'deb https://repo.anaconda.com/pkgs/misc/debrepo/conda stable main'
+        filename: conda.list
+  when:
+    - ansible_os_family == 'Debian'
 
 # RedHat Linux
 - block:
@@ -16,28 +29,51 @@
         state: present
         key: 'https://repo.anaconda.com/pkgs/misc/gpgkeys/anaconda.asc'
 
-    - name: install conda.repo file
+    - name: install Conda Yum repo
       copy:
         src: conda.repo
         dest: /etc/yum.repos.d
         owner: root
         group: root
         mode: 0644
-
-    - name: install miniconda package
-      package:
-        name: conda
-        state: present
   when:
     - ansible_os_family == 'RedHat'
 
+# Linux
+- name: install miniconda package
+  package:
+    name: conda
+    state: present
+  when: ansible_os_family in ['RedHat','Debian']
+
+- block:
+    - name: link /etc/profile.d/conda.sh
+      file:
+        src: "{{ miniconda_dir }}/etc/profile.d/conda.sh"
+        dest: /etc/profile.d/conda.sh
+        state: link
+        mode: 0777
+
+    - name: link /etc/profile.d/conda.csh
+      file:
+        src: "{{ miniconda_dir }}/etc/profile.d/conda.csh"
+        dest: /etc/profile.d/conda.csh
+        state: link
+        mode: 0777
+  when: ansible_os_family == 'RedHat'
+
+- name: source conda.sh in /etc/bash.bashrc
+  blockinfile:
+    path: "/etc/bash.bashrc"
+    state: present
+    block: |
+      # Initialize miniconda
+      .  {{ miniconda_dir }}/etc/profile.d/conda.sh
+    marker: '# {mark} ANSIBLE MANAGED BLOCK base_conda'
+  when: ansible_os_family == 'Debian'
 
 # Windows
 - block:
-
-    - name: set miniconda_dir
-      set_fact:
-        miniconda_dir: "{{ win_conda_dir }}"
 
     - name: ensure download directory exists on windows
       win_file:

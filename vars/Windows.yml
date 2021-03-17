@@ -1,0 +1,5 @@
+---
+# Windows
+win_conda_url: 'https://repo.anaconda.com/miniconda/Miniconda3-latest-Windows-x86_64.exe'
+win_download_dir: 'C:/Downloads/'
+miniconda_dir: 'C:/tools/miniconda3'

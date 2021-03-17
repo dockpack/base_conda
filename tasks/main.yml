@@ -1,21 +1,9 @@
 ---
 # tasks file for base_conda
 
-- name: set miniconda_dir
-  set_fact:
-    miniconda_dir: "{{ lin_conda_dir }}"
-    miniconda_bindir: "{{ lin_conda_bindir }}"
-    miniconda_envsdir: "{{ lin_conda_envsdir }}"
-  when:
-    - ansible_os_family == 'RedHat'
-
-- name: set miniconda_dir
-  set_fact:
-    miniconda_dir: "{{ mac_conda_dir }}"
-    miniconda_bindir: "{{ mac_conda_bindir }}"
-    miniconda_envsdir: "{{ mac_conda_envsdir }}"
-  when:
-    - ansible_os_family == 'Darwin'
+- name: set variables
+  include_vars: "{{ ansible_os_family }}.yml"
+  tags: always
 
 - name: check presence of conda
   stat:
@@ -38,7 +26,7 @@
     - dict
 # yamllint enable-rule:line-length
 
-- name: display dictionary
+- name: display list of dictionaries
   debug:
     var: conda_files
   tags:

@@ -1,0 +1,5 @@
+---
+# RedHat
+miniconda_dir: /opt/conda
+miniconda_bindir:  /opt/conda/bin
+miniconda_envsdir:  /opt/conda/envs
