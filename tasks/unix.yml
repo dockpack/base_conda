@@ -45,5 +45,5 @@
   register: clean
   changed_when: clean.rc|int == 0
   tags:
-    - miniconda
+    - conda_clean
     - notest
