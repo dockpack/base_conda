@@ -30,7 +30,7 @@
   loop: "{{ conda_files }}"
   loop_control:
     index_var: i
-  when:  actual_envs.results[i].stat.exists is defined
+  when: actual_envs.results[i].stat.exists is defined
 
 
 - name: cleanup conda

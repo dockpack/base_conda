@@ -44,7 +44,39 @@
   package:
     name: conda
     state: present
-  when: ansible_os_family in ['RedHat','Debian']
+  when: ansible_os_family in ['RedHat', 'Debian']
+
+- block:
+    - name: install package dependencies for miniconda installation
+      package:
+        name: bzip2
+        state: present
+      register: network_access
+      until: network_access is success
+      retries: 3
+      delay: 2
+
+    - name: download miniconda installer
+      get_url:
+        url: "{{ miniconda_installer_url }}"
+        checksum: "{{ miniconda_checksum }}"
+        dest: "/tmp/{{ miniconda_installer_sh }}"
+        mode: 0755
+        timeout: "{{ miniconda_timeout_seconds }}"
+      register: miniconda_download
+      until: miniconda_download is succeeded
+      retries: 3
+
+    - name: install miniconda
+      command: "/tmp/{{ miniconda_installer_sh }} -b -p {{ miniconda_dir }}"
+      args:
+        creates: "{{ miniconda_bindir }}"
+
+    - name: delete miniconda installer
+      file:
+        path: "/tmp/{{ miniconda_installer_sh }}"
+        state: absent
+  when: ansible_os_family not in ['RedHat', 'Debian', 'Darwin', 'Windows']
 
 - block:
     - name: link /etc/profile.d/conda.sh
