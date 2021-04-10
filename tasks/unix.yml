@@ -10,35 +10,35 @@
     - list
 
 - block:
-  - name: check if conda environments are present
-    stat:
-      path: "{{ miniconda_envsdir }}/{{ item.name }}"
-    with_items: "{{ conda_files }}"
-    register: actual_envs
-    tags:
-      - list
+    - name: check if conda environments are present
+      stat:
+        path: "{{ miniconda_envsdir }}/{{ item.name }}"
+      with_items: "{{ conda_files }}"
+      register: actual_envs
+      tags:
+        - list
 
-  - name: create conda environments from yml files
-    command: "{{ miniconda_bindir }}/conda env create -f {{ lin_download_dir }}/{{ item.file }}"
-    args:
-      creates: "{{ miniconda_envsdir }}/{{ item.name }}"
-    loop: "{{ conda_files }}"
-    loop_control:
-      index_var: i
-    tags:
-      - miniconda
-      - list
+    - name: create conda environments from yml files
+      command: "{{ miniconda_bindir }}/conda env create -f {{ lin_download_dir }}/{{ item.file }}"
+      args:
+        creates: "{{ miniconda_envsdir }}/{{ item.name }}"
+      loop: "{{ conda_files }}"
+      loop_control:
+        index_var: i
+      tags:
+        - miniconda
+        - list
 
-  - name: update conda envs that are present
-    command: "{{ miniconda_bindir }}/conda env update --name {{ item.name }} -f {{ lin_download_dir }}/{{ item.file }}"
-    changed_when: true
-    loop: "{{ conda_files }}"
-    loop_control:
-      index_var: i
-    when:  actual_envs.results[i].stat.exists is defined
-    tags:
-      - list
-      - notest
+    - name: update conda envs that are present
+      command: "{{ miniconda_bindir }}/conda env update --name {{ item.name }} -f {{ lin_download_dir }}/{{ item.file }}"
+      changed_when: true
+      loop: "{{ conda_files }}"
+      loop_control:
+        index_var: i
+      when: actual_envs.results[i].stat.exists is defined
+      tags:
+        - list
+        - notest
 
 - name: cleanup conda
   command: "{{ miniconda_dir }}/bin/conda clean --yes --all"
