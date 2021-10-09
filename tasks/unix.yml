@@ -1,6 +1,6 @@
 ---
-
-- name: copy conda-envs
+# Standards: 0.2
+- name: Copy conda-envs
   copy:
     src: "{{ item }}"
     dest: "{{ lin_download_dir }}"
@@ -10,7 +10,7 @@
     - list
 
 - block:
-    - name: check if conda environments are present
+    - name: Check if conda environments are present
       stat:
         path: "{{ miniconda_envsdir }}/{{ item.name }}"
       with_items: "{{ conda_files }}"
@@ -18,7 +18,7 @@
       tags:
         - list
 
-    - name: create conda environments from yml files
+    - name: Create conda environments from yml files
       command: "{{ miniconda_bindir }}/conda env create -f {{ lin_download_dir }}/{{ item.file }}"
       args:
         creates: "{{ miniconda_envsdir }}/{{ item.name }}"
@@ -29,7 +29,7 @@
         - miniconda
         - list
 
-    - name: update conda envs that are present
+    - name: Update conda envs that are present
       command: "{{ miniconda_bindir }}/conda env update --name {{ item.name }} -f {{ lin_download_dir }}/{{ item.file }}"
       changed_when: true
       loop: "{{ conda_files }}"
@@ -40,10 +40,11 @@
         - list
         - notest
 
-- name: cleanup conda
+- name: Cleanup conda
   command: "{{ miniconda_dir }}/bin/conda clean --yes --all"
   register: clean
   changed_when: clean.rc|int == 0
   tags:
     - miniconda
     - notest
+...

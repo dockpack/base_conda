@@ -1,7 +1,10 @@
 ---
+# Standards: 0.2
 dependencies: []
 
 galaxy_info:
+  role_name: base_conda
+  namespace: dockpack
   author: bbaassssiiee
   description: |
     Miniconda is the minimal version of Anaconda, a cross-platform
@@ -9,13 +12,30 @@ galaxy_info:
   license: MIT
   min_ansible_version: 2.7.0
   platforms:
+    - name: Ubuntu
+      versions:
+        - focal
+    - name: Debian
+      versions:
+        - buster
+    - name: EL
+      versions:
+        - 7
+        - 8
+    - name: Fedora
+      versions:
+        - all
     - name: Windows
       versions:
         - all
         - 2016
+    - name: macOS
+      versions:
+        - all
   galaxy_tags:
     - anaconda
     - windows
+    - macos
     - conda
     - python
     - virtualenv

@@ -1,45 +1,46 @@
 ---
 # tasks file for base_conda
-
-- name: set variables
+# Standards: 0.2
+- name: Set variables
   include_vars: "{{ ansible_os_family }}.yml"
   tags: always
 
-- name: check presence of conda
+- name: Check presence of conda
   when: ansible_os_family != 'Windows'
   stat:
     path: "{{ miniconda_bindir }}/conda"
   register: conda_executable
 
-- name: install miniconda
+- name: Install miniconda
   include_tasks: install.yml
   when: ansible_os_family == 'Windows' or not conda_executable.stat.exists
 
 # yamllint disable-rule:line-length
 # https://stackoverflow.com/questions/35605603/using-ansible-set-fact-to-create-a-dictionary-from-register-results
-- name: "create list of dictionaries, conda_files, each with properties 'name' and 'file'"
+- name: "Create list of dictionaries, conda_files, each with properties 'name' and 'file'"
   set_fact:
     conda_files: |
-        {{ conda_files|default([]) + [{'name': lookup('pipe', 'grep ^name: {{ item  }} | cut -d: -f2| tr -d " "' ), 'file': item|basename} ] }}
+        {{ conda_files | default([]) + [{'name': lookup('pipe', 'grep ^name: {{ item }} | cut -d: -f2| tr -d " "' ), 'file': item | basename} ] }}
   with_fileglob: "files/conda-envs/*.y*l"
   tags:
     - list
     - dict
 # yamllint enable-rule:line-length
 
-- name: display list of dictionaries
+- name: Display list of dictionaries
   debug:
     var: conda_files
   tags:
     - list
     - dict
 
-- name: create conda environments on unix
+- name: Create conda environments on unix
   include_tasks: unix.yml
   when: ansible_os_family != 'Windows'
   tags:
     - list
 
-- name: create conda environments on windows
+- name: Create conda environments on windows
   include_tasks: windows.yml
   when: ansible_os_family == 'Windows'
+...
