@@ -1,8 +1,8 @@
 ---
-
+# Standards: 0.2
 
 # Mac
-- name: install miniconda on macos
+- name: Install miniconda on macos
   become: false
   command: /usr/local/bin/brew install miniconda
   when:
@@ -10,12 +10,12 @@
 
 # Debian Linux
 - block:
-    - name: install conda gpg key
+    - name: Install conda apt gpg key
       apt_key:
         state: present
         url: 'https://repo.anaconda.com/pkgs/misc/gpgkeys/anaconda.asc'
 
-    - name: install Conda Debian repo
+    - name: Install Conda Debian repo
       apt_repository:
         repo: 'deb https://repo.anaconda.com/pkgs/misc/debrepo/conda stable main'
         filename: conda.list
@@ -24,12 +24,12 @@
 
 # RedHat Linux
 - block:
-    - name: install conda gpg key
+    - name: Install conda rpm gpg key
       rpm_key:
         state: present
         key: 'https://repo.anaconda.com/pkgs/misc/gpgkeys/anaconda.asc'
 
-    - name: install Conda Yum repo
+    - name: Install Conda Yum repo
       copy:
         src: conda.repo
         dest: /etc/yum.repos.d
@@ -40,14 +40,14 @@
     - ansible_os_family == 'RedHat'
 
 # Linux
-- name: install miniconda package
+- name: Install miniconda package
   package:
     name: conda
     state: present
   when: ansible_os_family in ['RedHat', 'Debian']
 
 - block:
-    - name: install package dependencies for miniconda installation
+    - name: Install package dependencies for miniconda installation
       package:
         name: bzip2
         state: present
@@ -56,7 +56,7 @@
       retries: 3
       delay: 2
 
-    - name: download miniconda installer
+    - name: Download miniconda installer
       get_url:
         url: "{{ miniconda_installer_url }}"
         checksum: "{{ miniconda_checksum }}"
@@ -67,26 +67,26 @@
       until: miniconda_download is succeeded
       retries: 3
 
-    - name: install miniconda
+    - name: Install miniconda
       command: "/tmp/{{ miniconda_installer_sh }} -b -p {{ miniconda_dir }}"
       args:
         creates: "{{ miniconda_bindir }}"
 
-    - name: delete miniconda installer
+    - name: Delete miniconda installer
       file:
         path: "/tmp/{{ miniconda_installer_sh }}"
         state: absent
   when: ansible_os_family not in ['RedHat', 'Debian', 'Darwin', 'Windows']
 
 - block:
-    - name: link /etc/profile.d/conda.sh
+    - name: Link /etc/profile.d/conda.sh
       file:
         src: "{{ miniconda_dir }}/etc/profile.d/conda.sh"
         dest: /etc/profile.d/conda.sh
         state: link
         mode: 0777
 
-    - name: link /etc/profile.d/conda.csh
+    - name: Link /etc/profile.d/conda.csh
       file:
         src: "{{ miniconda_dir }}/etc/profile.d/conda.csh"
         dest: /etc/profile.d/conda.csh
@@ -94,7 +94,7 @@
         mode: 0777
   when: ansible_os_family == 'RedHat'
 
-- name: source conda.sh in /etc/bash.bashrc
+- name: Source conda.sh in /etc/bash.bashrc
   blockinfile:
     path: "/etc/bash.bashrc"
     state: present
@@ -107,12 +107,12 @@
 # Windows
 - block:
 
-    - name: ensure download directory exists on windows
+    - name: Ensure download directory exists on windows
       win_file:
         path: "{{ win_download_dir }}"
         state: directory
 
-    - name: download miniconda on windows
+    - name: Download miniconda on windows
       win_get_url:
         url: "{{ win_conda_url }}"
         dest: "{{ win_download_dir }}/{{ win_installer }}"
@@ -121,9 +121,10 @@
       retries: 10
       delay: 2
 
-    - name: install miniconda on windows
+    - name: Install miniconda on windows
       win_shell: '{{ win_download_dir }}\{{ win_installer }} /InstallationType=AllUsers /RegisterPython=1 /AddToPath=1 /S /D={{ miniconda_dir }}'
       args:
         chdir: "{{ win_download_dir }}"
         creates: "{{ miniconda_bindir }}"
   when: ansible_os_family == 'Windows'
+...

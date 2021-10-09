@@ -1,41 +1,41 @@
 ---
-
-- name: copy conda environment templates
+# Standards: 0.2
+- name: Copy conda environment templates
   win_template:
     dest: 'C:/tmp/'
     src: "{{ item }}"
   with_fileglob: "files/conda-envs/*.yml"
 
-- name: check if conda environments are present
+- name: Check if conda environments are present
   win_stat:
     path: "{{ miniconda_envsdir }}/{{ item.name }}"
   with_items: "{{ conda_files }}"
   register: actual_envs
 
-- name: configure conda environments
+- name: Configure conda environments
   win_shell: |
     cmd.exe {{ miniconda_dir }}/Scripts/activate.bat {{ miniconda_dir }}
-    {{ miniconda_bindir }}/conda env create -f C:/tmp/{{ item.file  }}
+    {{ miniconda_bindir }}/conda env create -f C:/tmp/{{ item.file }}
   args:
     creates: "{{ miniconda_envsdir }}/{{ item.name }}"
   loop: "{{ conda_files }}"
   tags:
     - venv
 
-- name: update conda envs that are present
+- name: Update conda envs that are present
   win_shell: |
     cmd.exe {{ miniconda_dir }}/Scripts/activate.bat {{ miniconda_dir }}
-    {{ miniconda_bindir }}/conda env update --name {{ item.name }} -f C:/tmp/{{ item.file  }}
+    {{ miniconda_bindir }}/conda env update --name {{ item.name }} -f C:/tmp/{{ item.file }}
   changed_when: true
   loop: "{{ conda_files }}"
   loop_control:
     index_var: i
   when: actual_envs.results[i].stat.exists is defined
 
-
-- name: cleanup conda
+- name: Cleanup conda
   win_shell: |
     cmd.exe {{ miniconda_dir }}/Scripts/activate.bat {{ miniconda_dir }}
     {{ miniconda_bindir }}/conda clean --all
   tags:
     - cleanup
+...
