@@ -40,11 +40,20 @@
     - ansible_os_family == 'RedHat'
 
 # Linux
-- name: Install miniconda package
+- name: Install miniconda package on Debian
   package:
     name: conda
     state: present
-  when: ansible_os_family in ['RedHat', 'Debian']
+  when: ansible_os_family == 'Debian'
+- name: Install miniconda package on RedHat
+  yum:
+    name: conda
+    # Force use of conda repo on RedHat instead of epel
+    # (if base_epel ran before base_conda)
+    disablerepo: '*'
+    enablerepo: 'conda'
+    state: present
+  when: ansible_os_family == 'RedHat'
 
 - block:
     - name: Install package dependencies for miniconda installation
@@ -79,12 +88,23 @@
   when: ansible_os_family not in ['RedHat', 'Debian', 'Darwin', 'Windows']
 
 - block:
+    - name: Check if /etc/profile.d/conda.sh exists
+      stat:
+        path: /etc/profile.d/conda.sh
+      register: etc_profile_d_conda_sh
+
+    - name: Check if /etc/profile.d/conda.csh exists
+      stat:
+        path: /etc/profile.d/conda.csh
+      register: etc_profile_d_conda_csh
+
     - name: Link /etc/profile.d/conda.sh
       file:
         src: "{{ miniconda_dir }}/etc/profile.d/conda.sh"
         dest: /etc/profile.d/conda.sh
         state: link
         mode: 0777
+      when: etc_profile_d_conda_sh.stat.exists == False
 
     - name: Link /etc/profile.d/conda.csh
       file:
@@ -92,6 +112,7 @@
         dest: /etc/profile.d/conda.csh
         state: link
         mode: 0777
+      when: etc_profile_d_conda_csh.stat.exists == False
   when: ansible_os_family == 'RedHat'
 
 - name: Source conda.sh in /etc/bash.bashrc
