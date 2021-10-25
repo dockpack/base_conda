@@ -45,6 +45,7 @@
     name: conda
     state: present
   when: ansible_os_family == 'Debian'
+
 - name: Install miniconda package on RedHat
   yum:
     name: conda
@@ -104,7 +105,7 @@
         dest: /etc/profile.d/conda.sh
         state: link
         mode: 0777
-      when: etc_profile_d_conda_sh.stat.exists == False
+      when: not etc_profile_d_conda_sh.stat.exists
 
     - name: Link /etc/profile.d/conda.csh
       file:
@@ -112,7 +113,7 @@
         dest: /etc/profile.d/conda.csh
         state: link
         mode: 0777
-      when: etc_profile_d_conda_csh.stat.exists == False
+      when: not etc_profile_d_conda_csh.stat.exists
   when: ansible_os_family == 'RedHat'
 
 - name: Source conda.sh in /etc/bash.bashrc
