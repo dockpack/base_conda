@@ -1,6 +1,5 @@
 ---
 # Alpine
-# Standards: 0.2
 miniconda_dir: /opt/conda
 miniconda_bindir: /opt/conda/bin
 miniconda_envsdir: /opt/conda/envs

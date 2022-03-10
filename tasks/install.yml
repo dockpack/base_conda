@@ -1,5 +1,4 @@
 ---
-# Standards: 0.2
 
 # Mac
 - name: Install miniconda on macos
@@ -40,9 +39,11 @@
     - ansible_os_family == 'RedHat'
 
 # Linux
-- name: Install miniconda package on Debian
+- name: Install packages
   package:
-    name: conda
+    name:
+      - glibc.i668
+      - conda
     state: present
   when: ansible_os_family == 'Debian'
 

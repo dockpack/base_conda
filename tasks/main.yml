@@ -1,6 +1,5 @@
 ---
 # tasks file for base_conda
-# Standards: 0.2
 - name: Set variables
   include_vars: "{{ ansible_os_family }}.yml"
   tags: always

@@ -1,6 +1,5 @@
 ---
 # Windows
-# Standards: 0.2
 win_installer: 'Miniconda3-latest-Windows-x86_64.exe'
 win_conda_url: "https://repo.anaconda.com/miniconda/{{ win_installer }}"
 win_download_dir: 'C:/Downloads/'

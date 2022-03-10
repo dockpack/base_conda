@@ -4,5 +4,7 @@
   hosts: all
 
   tasks:
-    - debug:
+    - name: Display OS
+      debug:
         msg: "os {{ ansible_os_family }}"
+...

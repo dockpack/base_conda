@@ -1,6 +1,5 @@
 ---
 # Mac
-# Standards: 0.2
 miniconda_dir: /usr/local/Caskroom/miniconda
 miniconda_bindir: /usr/local/Caskroom/miniconda/base/condabin
 miniconda_envsdir: /usr/local/Caskroom/miniconda/base/envs
