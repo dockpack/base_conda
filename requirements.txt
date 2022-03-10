@@ -1,12 +1,13 @@
 # these python extensions are for ansible testing
 tox
 sh==1.12.14
-molecule
+molecule==3.2.3
 molecule-docker
 molecule-vagrant
-yamllint
-ansible-lint
-docker==4.2.2
+yamllint==1.26.3
+ansible-lint==4.3.7
+ansible-later==1.4.1
+docker>=4.3.1
 anyconfig>=0.10.0 # not directly required, pinned by Snyk to avoid a vulnerability
 beautifulsoup4
 packaging
