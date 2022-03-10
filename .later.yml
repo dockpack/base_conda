@@ -6,13 +6,22 @@ ansible:
   # directory will be auto-detected and don't need to be added to this list.
   custom_modules: []
 
-  # List of yamllint compatible literal bools (ANSIBLE0014)
+  # List of allowed literal bools (ANSIBLE0014)
   literal-bools:
-    - "true"
-    - "false"
+    - 'true'
+    - 'false'
 rules:
   exclude_files:
-    - molecule/
-    - files/conda-envs/
+    - molecule
     - requirements.txt
+
+  named-task:
+    exclude:
+      - 'meta'
+      - 'debug'
+      - 'block'
+
+  native-yaml:
+    exclude:
+      - 'debug'
 ...

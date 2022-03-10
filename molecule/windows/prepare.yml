@@ -6,3 +6,4 @@
   tasks:
     - debug:
         msg: "os {{ ansible_os_family }}"
+...

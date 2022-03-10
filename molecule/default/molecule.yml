@@ -6,6 +6,7 @@ lint: |
   set -e
   yamllint .
   ansible-lint
+  ansible-later -qq
 platforms:
   - name: conda_centos7
     image: centos:7
@@ -14,3 +15,4 @@ provisioner:
   name: ansible
 verifier:
   name: ansible
+...
