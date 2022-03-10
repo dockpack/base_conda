@@ -39,9 +39,11 @@
     - ansible_os_family == 'RedHat'
 
 # Linux
-- name: Install miniconda package
+- name: Install packages
   package:
-    name: conda
+    name:
+      - glibc.i668
+      - conda
     state: present
   when: ansible_os_family in ['RedHat', 'Debian']
 
