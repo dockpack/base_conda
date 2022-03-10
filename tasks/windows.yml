@@ -1,5 +1,4 @@
 ---
-# Standards: 0.2
 - name: Copy conda environment templates
   win_template:
     dest: 'C:/tmp/'

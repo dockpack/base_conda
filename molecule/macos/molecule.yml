@@ -6,6 +6,7 @@ lint: |
   set -e
   yamllint .
   ansible-lint
+  ansible-later
 platforms:
   - name: localhost
 provisioner:
