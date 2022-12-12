@@ -1,21 +1,17 @@
 ---
-
+dependency:
+  name: galaxy
 driver:
-  name: docker
-lint: |
-  set -e
-  yamllint .
-  ansible-lint
+  name: azure
 platforms:
-  - name: conda_centos7
-    image: centos:7
-    privileged: true
+  - name: instance
 provisioner:
   name: ansible
   playbooks:
+    create: create.yml
     converge: ../shared/converge.yml
     verify: ../shared/verify.yml
+    destroy: destroy.yml
 verifier:
   name: ansible
   directory: ../shared/tests/
-...

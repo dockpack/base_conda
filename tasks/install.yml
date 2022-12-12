@@ -7,8 +7,9 @@
   when:
     - ansible_os_family == 'Darwin'
 
-# Debian Linux
-- block:
+
+- name: Debian Linux
+  block:
     - name: Install conda apt gpg key
       apt_key:
         state: present
@@ -21,8 +22,8 @@
   when:
     - ansible_os_family == 'Debian'
 
-# RedHat Linux
-- block:
+- name: RedHat Linux
+  block:
     - name: Install conda rpm gpg key
       rpm_key:
         state: present
@@ -57,7 +58,8 @@
     state: present
   when: ansible_os_family == 'RedHat'
 
-- block:
+- name: Install installer
+  block:
     - name: Install package dependencies for miniconda installation
       package:
         name: bzip2
@@ -89,7 +91,8 @@
         state: absent
   when: ansible_os_family not in ['RedHat', 'Debian', 'Darwin', 'Windows']
 
-- block:
+- name: Configure shells
+  block:
     - name: Check if /etc/profile.d/conda.sh exists
       stat:
         path: /etc/profile.d/conda.sh
@@ -127,8 +130,8 @@
     marker: '# {mark} ANSIBLE MANAGED BLOCK base_conda'
   when: ansible_os_family == 'Debian'
 
-# Windows
-- block:
+- name: Windows
+  block:
 
     - name: Ensure download directory exists on windows
       win_file:

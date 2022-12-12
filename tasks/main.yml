@@ -14,9 +14,8 @@
   include_tasks: install.yml
   when: ansible_os_family == 'Windows' or not conda_executable.stat.exists
 
-# yamllint disable-rule:line-length
 # https://stackoverflow.com/questions/35605603/using-ansible-set-fact-to-create-a-dictionary-from-register-results
-- name: "Create list of dictionaries, conda_files, each with properties 'name' and 'file'"
+- name: "Create list of dictionaries, conda_files, each with properties 'name' and 'file'"  # noqa: var-spacing
   set_fact:
     conda_files: |
         {{ conda_files | default([]) + [{'name': lookup('pipe', 'grep ^name: {{ item }} | cut -d: -f2| tr -d " "' ), 'file': item | basename} ] }}
@@ -24,7 +23,6 @@
   tags:
     - list
     - dict
-# yamllint enable-rule:line-length
 
 - name: Display list of dictionaries
   debug:

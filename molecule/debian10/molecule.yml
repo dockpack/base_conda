@@ -16,6 +16,10 @@ platforms:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
 provisioner:
   name: ansible
+  playbooks:
+    converge: ../shared/converge.yml
+    verify: ../shared/verify.yml
 verifier:
   name: ansible
+  directory: ../shared/tests/
 ...

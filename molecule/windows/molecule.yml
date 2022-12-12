@@ -17,6 +17,10 @@ platforms:
       - windows
 provisioner:
   name: ansible
+  playbooks:
+    prepare: prepare.yml
+    converge: ../shared/converge.yml
+    verify: ../shared/verify.yml
   inventory:
     host_vars:
       conda-windows:
@@ -29,4 +33,5 @@ provisioner:
         ansible_winrm_server_cert_validation: ignore
 verifier:
   name: ansible
+  directory: ../shared/tests/
 ...

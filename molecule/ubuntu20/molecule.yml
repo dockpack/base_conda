@@ -18,6 +18,10 @@ platforms:
     privileged: true
 provisioner:
   name: ansible
+  playbooks:
+    converge: ../shared/converge.yml
+    verify: ../shared/verify.yml
 verifier:
   name: ansible
+  directory: ../shared/tests/
 ...
