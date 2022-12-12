@@ -6,11 +6,16 @@ lint: |
   set -e
   yamllint .
   ansible-lint
-  ansible-later
 platforms:
   - name: localhost
 provisioner:
   name: ansible
+  playbooks:
+    create: create.yml
+    converge: ../shared/converge.yml
+    verify: ../shared/verify.yml
+    destroy: destroy.yml
 verifier:
   name: ansible
+  directory: ../shared/tests/
 ...

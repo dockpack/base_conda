@@ -8,7 +8,8 @@
   tags:
     - list
 
-- block:
+- name: Conda environments
+  block:
     - name: Check if conda environments are present
       stat:
         path: "{{ miniconda_envsdir }}/{{ item.name }}"
@@ -18,6 +19,7 @@
         - list
 
     - name: Create conda environments from yml files
+      # yamllint disable-line rule:line-length
       command: bash -c "if [[ {{ item.file }} =~ .*_32.yml ]]; then export CONDA_FORCE_32BIT=1; fi; {{ miniconda_bindir }}/conda env create -f {{ lin_download_dir }}/{{ item.file }}"
       args:
         creates: "{{ miniconda_envsdir }}/{{ item.name }}"
@@ -29,6 +31,7 @@
         - list
 
     - name: Update conda envs that are present
+      # yamllint disable-line rule:line-length
       command: bash -c "if [[ {{ item.file }} =~ .*_32.yml ]]; then export CONDA_FORCE_32BIT=1; fi; {{ miniconda_bindir }}/conda env update --name {{ item.name }} -f {{ lin_download_dir }}/{{ item.file }}"
       changed_when: true
       loop: "{{ conda_files }}"

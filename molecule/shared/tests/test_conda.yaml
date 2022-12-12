@@ -1,0 +1,14 @@
+---
+file:
+  /opt/conda/bin/conda:
+    exists: true
+    mode: "0775"
+    owner: root
+    group: root
+    filetype: file
+  /opt/conda/envs:
+    exists: true
+    mode: "0755"
+    owner: root
+    group: root
+    filetype: directory
