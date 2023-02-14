@@ -14,7 +14,6 @@
 - name: Configure conda environments
   win_shell: |
     cmd.exe {{ miniconda_dir }}/Scripts/activate.bat {{ miniconda_dir }}
-    if ("{{ item.file }}" -eq "env_py37_32.yml") {:CONDA_FORCE_32BIT = "1"}
     {{ miniconda_bindir }}/conda env create -f C:/tmp/{{ item.file }}
   args:
     creates: "{{ miniconda_envsdir }}/{{ item.name }}"
@@ -25,7 +24,6 @@
 - name: Update conda envs that are present
   win_shell: |
     cmd.exe {{ miniconda_dir }}/Scripts/activate.bat {{ miniconda_dir }}
-    if ("{{ item.file }}" -eq "env_py37_32.yml") {:CONDA_FORCE_32BIT = "1"}
     {{ miniconda_bindir }}/conda env update --name {{ item.name }} -f C:/tmp/{{ item.file }}
   changed_when: true
   loop: "{{ conda_files }}"
