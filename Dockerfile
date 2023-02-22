@@ -7,7 +7,7 @@ RUN yum install -y epel-release && \
     yum clean all
 COPY ./files/hosts /etc/ansible/hosts
 ADD . /tmp/ansible/roles/base_conda
-COPY ./molecule/default/converge.yml /tmp/ansible/
+COPY ./molecule/shared/converge.yml /tmp/ansible/
 RUN cd /tmp/ansible && ansible-playbook converge.yml
 ENV PATH /opt/conda/envs/env/bin:$PATH
 ENV LANG C.UTF-8
